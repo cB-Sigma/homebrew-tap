@@ -1,0 +1,82 @@
+name: Auto-bump
+
+# Twice a day: checks the latest GitHub release of uccharan and the latest
+# version of bolo-speech on PyPI. When one is newer than its formula, the
+# formula is updated (url, sha256 and, for bolo, the pinned requirements),
+# installed and tested on macOS and Linux by tests.yml, and pushed to main.
+# When a test fails, main is left as it is and this run fails.
+# Uses only this repository's GITHUB_TOKEN; nothing needs to be set up.
+on:
+  schedule:
+    - cron: "23 5,17 * * *"
+  workflow_dispatch:
+    inputs:
+      force:
+        description: "Resolve bolo's pinned requirements again even without a new version"
+        type: boolean
+        default: false
+
+permissions:
+  contents: read
+
+concurrency:
+  group: autobump
+  cancel-in-progress: false
+
+jobs:
+  bump:
+    name: look for new releases
+    runs-on: ubuntu-latest
+    outputs:
+      changed: ${{ steps.bump.outputs.changed }}
+      summary: ${{ steps.bump.outputs.summary }}
+    steps:
+      - uses: actions/checkout@v7
+      - uses: actions/setup-python@v7
+        with:
+          python-version: "3.13"
+      - name: Update the formulae
+        id: bump
+        env:
+          GITHUB_TOKEN: ${{ github.token }}
+          PYTHON: python
+          FORCE: ${{ inputs.force && '--force' || '' }}
+        run: |
+          python .github/scripts/bump.py uccharan bolo $FORCE
+          git diff
+      - uses: actions/upload-artifact@v7
+        if: steps.bump.outputs.changed != '[]'
+        with:
+          name: bumped-formulae
+          path: Formula/
+
+  test:
+    name: test
+    needs: bump
+    if: needs.bump.outputs.changed != '[]'
+    uses: ./.github/workflows/tests.yml
+    with:
+      formulae: ${{ needs.bump.outputs.changed }}
+      artifact: bumped-formulae
+
+  push:
+    name: push to main
+    needs: [bump, test]
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    steps:
+      # the commit the bump started from: when main has moved since, the push fails
+      - uses: actions/checkout@v7
+      - uses: actions/download-artifact@v8
+        with:
+          name: bumped-formulae
+          path: Formula/
+      - name: Commit and push
+        env:
+          SUMMARY: ${{ needs.bump.outputs.summary }}
+        run: |
+          git add Formula
+          if git diff --cached --quiet; then echo "nothing to commit"; exit 0; fi
+          git -c user.name="Abhinav Gautam" -c user.email="abhinav@codebuckets.in" commit -m "$SUMMARY"
+          git push origin HEAD:main

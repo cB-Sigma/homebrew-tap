@@ -1,0 +1,122 @@
+name: Tests
+
+# Installs each changed formula on macOS (Apple Silicon and Intel) and Linux
+# (x86_64 and arm64), runs its test block and audits it. Also called by
+# autobump.yml with the bumped formulae before they are pushed.
+on:
+  push:
+    branches: [main]
+  pull_request:
+  workflow_dispatch:
+    inputs:
+      formulae:
+        description: 'Formulae to test, as a JSON list (empty: all)'
+        type: string
+        default: ""
+  workflow_call:
+    inputs:
+      formulae:
+        description: "Formulae to test, as a JSON list"
+        type: string
+        required: true
+      artifact:
+        description: "Name of an artifact holding the Formula directory to test instead of the checked-out one"
+        type: string
+        default: ""
+
+permissions:
+  contents: read
+
+concurrency:
+  group: tests-${{ github.workflow }}-${{ github.ref }}-${{ inputs.artifact || 'tree' }}
+  cancel-in-progress: ${{ github.event_name == 'pull_request' }}
+
+jobs:
+  changed:
+    name: changed formulae
+    runs-on: ubuntu-latest
+    outputs:
+      formulae: ${{ steps.list.outputs.formulae }}
+    steps:
+      - uses: actions/checkout@v7
+        with:
+          fetch-depth: 0
+      - name: List the formulae to test
+        id: list
+        env:
+          EVENT: ${{ github.event_name }}
+          INPUT: ${{ inputs.formulae }}
+          BEFORE: ${{ github.event.before }}
+          BASE: ${{ github.event.pull_request.base.sha }}
+        run: |
+          all="$(ls Formula/*.rb | xargs -n1 basename | sed 's/\.rb$//' | jq -Rnc '[inputs]')"
+          if [ -n "$INPUT" ]; then
+            formulae="$INPUT"
+          elif [ "$EVENT" = "pull_request" ] || { [ "$EVENT" = "push" ] && [ -n "$BEFORE" ] && ! [[ "$BEFORE" =~ ^0+$ ]]; }; then
+            base="${BASE:-$BEFORE}"
+            changed="$(git diff --name-only "$base" HEAD)"
+            if grep -q '^\.github/workflows/tests\.yml$' <<< "$changed"; then
+              formulae="$all"
+            else
+              formulae="$(grep -E '^Formula/[^/]+\.rb$' <<< "$changed" | xargs -r -n1 basename | sed 's/\.rb$//' | jq -Rnc '[inputs]')"
+            fi
+          else
+            formulae="$all"
+          fi
+          echo "formulae=${formulae:-[]}" >> "$GITHUB_OUTPUT"
+          echo "formulae to test: ${formulae:-[]}"
+
+  test:
+    name: ${{ matrix.formula }} on ${{ matrix.os }}
+    needs: changed
+    if: needs.changed.outputs.formulae != '[]'
+    runs-on: ${{ matrix.os }}
+    strategy:
+      fail-fast: false
+      matrix:
+        formula: ${{ fromJSON(needs.changed.outputs.formulae) }}
+        os: [macos-14, macos-15-intel, ubuntu-latest, ubuntu-24.04-arm]
+    env:
+      HOMEBREW_NO_ANALYTICS: 1
+      HOMEBREW_NO_AUTO_UPDATE: 1
+      HOMEBREW_NO_INSTALL_CLEANUP: 1
+      HOMEBREW_NO_ENV_HINTS: 1
+      FORMULA: cb-sigma/tap/${{ matrix.formula }}
+    steps:
+      - name: Set up Homebrew
+        id: brew
+        uses: Homebrew/actions/setup-homebrew@main
+
+      - name: Find the tap
+        id: tap
+        run: echo "path=$(brew --repository cb-sigma/tap)" >> "$GITHUB_OUTPUT"
+
+      - name: Use the formulae under test
+        if: inputs.artifact != ''
+        uses: actions/download-artifact@v8
+        with:
+          name: ${{ inputs.artifact }}
+          path: ${{ steps.tap.outputs.path }}/Formula
+
+      - name: Show the formula
+        run: |
+          brew info "$FORMULA"
+          git -C "${{ steps.tap.outputs.path }}" diff --stat || true
+
+      - name: Style
+        run: brew style "$FORMULA"
+
+      - name: Install from source
+        run: brew install --build-from-source --verbose "$FORMULA"
+
+      - name: Test
+        run: brew test --verbose "$FORMULA"
+
+      - name: Audit
+        run: brew audit --strict --online "$FORMULA"
+
+      - name: Linkage
+        # bolo's Linux wheels (manylinux) link the system's libz by design, which
+        # `brew linkage --test` reports as unwanted; uccharan has to be clean.
+        if: matrix.formula != 'bolo' || runner.os == 'macOS'
+        run: brew linkage --test "$FORMULA"
