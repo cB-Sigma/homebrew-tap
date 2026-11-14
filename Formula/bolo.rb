@@ -50,7 +50,9 @@ class Bolo < Formula
     # Some Intel macOS wheels (PyAV's bundled libraries) carry absolute dylib IDs too
     # long for Homebrew to rewrite in place; @rpath IDs are kept as they are.
     if OS.mac? && Hardware::CPU.intel?
-      libexec.glob("lib/python*/site-packages/**/*.{dylib,so}").each do |file|
+      # (find, not glob: the libraries are in hidden .dylibs directories)
+      (libexec/"lib").find do |file|
+        next if file.symlink? || !file.file? || [".dylib", ".so"].exclude?(file.extname)
         next if !file.dylib? || file.dylib_id.nil? || file.dylib_id.start_with?("@")
 
         file.change_dylib_id("@rpath/#{File.basename(file.dylib_id)}")
