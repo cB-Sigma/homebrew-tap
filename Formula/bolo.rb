@@ -21,6 +21,10 @@ class Bolo < Formula
     depends_on macos: :sonoma
   end
 
+  # The wheels' extension modules keep their @rpath install names: rewriting them
+  # to absolute paths does not fit in the Mach-O headers of some of them.
+  preserve_rpath
+
   def install
     venv = virtualenv_create(libexec, "python3.13")
     (buildpath/"constraints.txt").write pinned_requirements
