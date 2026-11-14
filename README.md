@@ -80,14 +80,21 @@ previous one until the problem is fixed.
 | | uccharan | bolo |
 | --- | --- | --- |
 | macOS, Apple Silicon | yes | macOS 14 (Sonoma) or later |
-| macOS, Intel | yes | macOS 14 or later, with onnxruntime 1.23 (its last release for Intel Macs) |
+| macOS, Intel | yes, slowly (see below); not tested here | macOS 14 or later, with onnxruntime 1.23 (its last release for Intel Macs) |
 | Linux x86_64 | yes | yes |
 | Linux arm64 | yes | yes |
 
-bolo needs macOS 14 or later because onnxruntime and PyAV publish their Apple Silicon wheels for
-macOS 14 and later only. On Linux, bolo's wheels are manylinux builds, which use the system's
-glibc and zlib. No bottles are published: uccharan is built from source, and bolo installs
-prebuilt wheels.
+- bolo needs macOS 14 or later because onnxruntime and PyAV publish their Apple Silicon wheels for
+  macOS 14 and later only. On Linux, bolo's wheels are manylinux builds, which use the system's
+  glibc and zlib.
+- Intel Macs have been a tier 3 platform for Homebrew since September 2026, and Homebrew no longer
+  publishes Intel bottles of `rust` or `python@3.13`. Installing uccharan there builds Rust from
+  source first, which takes hours; bolo builds `python@3.13` from source, which takes
+  minutes. The same applies to macOS releases older than Homebrew supports.
+- The tests here run on macOS 15 (Apple Silicon and, for bolo, Intel) and on Ubuntu (x86_64 and
+  arm64).
+- No bottles are published: uccharan is built from source (a few minutes with Rust installed), and
+  bolo installs prebuilt wheels.
 
 ## Problems
 

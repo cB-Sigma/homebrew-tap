@@ -78,7 +78,7 @@ jobs:
         os: [macos-15, macos-15-intel, ubuntu-latest, ubuntu-24.04-arm]
         exclude:
           # Intel macOS is a tier 3 platform for Homebrew since September 2026: rust
-          # has no Intel bottle, so this job would build Rust and LLVM from source
+          # has no Intel bottle, so this job would build Rust from source
           # for hours. bolo is still tested there (python@3.13 builds in minutes).
           - formula: uccharan
             os: macos-15-intel

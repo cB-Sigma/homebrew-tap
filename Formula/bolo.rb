@@ -46,6 +46,16 @@ class Bolo < Formula
            "--ignore-installed", "--only-binary=:all:", "--constraint", buildpath/"constraints.txt",
            "bolo-speech[all] @ file://#{buildpath}/bolo_speech-#{version}-py3-none-any.whl"
     libexec.install buildpath/"constraints.txt"
+
+    # Some Intel macOS wheels (PyAV's bundled libraries) carry absolute dylib IDs too
+    # long for Homebrew to rewrite in place; @rpath IDs are kept as they are.
+    if OS.mac? && Hardware::CPU.intel?
+      libexec.glob("lib/python*/site-packages/**/*.{dylib,so}").each do |file|
+        next if !file.dylib? || file.dylib_id.nil? || file.dylib_id.start_with?("@")
+
+        file.change_dylib_id("@rpath/#{File.basename(file.dylib_id)}")
+      end
+    end
     bin.install_symlink libexec/"bin/bolo"
   end
 
