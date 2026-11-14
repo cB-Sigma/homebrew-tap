@@ -112,6 +112,15 @@ jobs:
       - name: Style
         run: brew style "$FORMULA"
 
+      - name: Dependencies
+        run: |
+          # On the Intel runners, python@3.13 has no bottle and its links collide with
+          # the runner's own Python in /usr/local; let Homebrew's links win.
+          brew install --only-dependencies "$FORMULA" || true
+          for dep in $(brew deps "$FORMULA"); do
+            brew link --overwrite "$dep" > /dev/null 2>&1 || true
+          done
+
       - name: Install from source
         run: brew install --build-from-source --verbose "$FORMULA"
 
