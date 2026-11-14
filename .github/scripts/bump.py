@@ -100,7 +100,7 @@ def resolve_bolo_pins(version: str) -> str:
     pins = []
     for line in sorted(frozen.splitlines(), key=str.lower):
         name = line.split("==")[0].lower().replace("_", "-")
-        if not line.strip() or name in {"bolo-speech", "setuptools", "wheel"}:
+        if not line.strip() or name in {"bolo-speech", "pip", "setuptools", "wheel"}:
             continue
         if name == "onnxruntime":
             # onnxruntime stopped publishing Intel macOS wheels after 1.23.

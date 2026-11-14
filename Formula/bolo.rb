@@ -25,15 +25,25 @@ class Bolo < Formula
   # to absolute paths does not fit in the Mach-O headers of some of them.
   preserve_rpath
 
+  # pip for the virtualenv, so that it does not depend on the pip of python@3.13.
+  resource "pip" do
+    url "https://files.pythonhosted.org/packages/3f/06/3e4420302363fbb71be3c7f35ce042f54bfca330e3e66b3a2e3c4cca579f/pip-26.2.2-py3-none-any.whl", using: :nounzip
+    sha256 "fd7f4dfa8190e014013b9f08f3e973f4e4c26ffd179a204895533a7254813a70"
+  end
+
   def install
     venv = virtualenv_create(libexec, "python3.13")
-    (buildpath/"constraints.txt").write pinned_requirements
+    python = venv.root/"bin/python"
+    resource("pip").stage do
+      wheel = Pathname.pwd/"pip-#{resource("pip").version}-py3-none-any.whl"
+      system python, wheel/"pip", "install", "--no-cache-dir", "--no-deps", "--ignore-installed", wheel
+    end
+
     # bolo-speech[all] and its dependencies are installed from PyPI wheels at the
-    # versions pinned below, so that every build gets the same set. pip goes into
-    # the virtualenv too, for adding the optional extras (see the caveats).
-    system "python3.13", "-m", "pip", "--python=#{venv.root}/bin/python", "install",
-           "--no-cache-dir", "--disable-pip-version-check", "--ignore-installed", "--only-binary=:all:",
-           "--constraint", buildpath/"constraints.txt", "pip",
+    # versions pinned below, so that every build gets the same set.
+    (buildpath/"constraints.txt").write pinned_requirements
+    system python, "-m", "pip", "install", "--no-cache-dir", "--disable-pip-version-check",
+           "--ignore-installed", "--only-binary=:all:", "--constraint", buildpath/"constraints.txt",
            "bolo-speech[all] @ file://#{buildpath}/bolo_speech-#{version}-py3-none-any.whl"
     libexec.install buildpath/"constraints.txt"
     bin.install_symlink libexec/"bin/bolo"
@@ -70,7 +80,6 @@ class Bolo < Formula
       onnxruntime==1.23.2; sys_platform == "darwin" and platform_machine == "x86_64"
       opentelemetry-api==1.45.2
       packaging==26.3
-      pip==26.2.2
       protobuf==7.36.2
       psutil==7.2.2
       pycparser==3.12
