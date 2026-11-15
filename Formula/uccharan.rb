@@ -1,8 +1,8 @@
 class Uccharan < Formula
   desc "Phonemiser, text normaliser and transliterator for speech engines"
   homepage "https://cb-sigma.github.io/uccharan/"
-  url "https://github.com/cB-Sigma/uccharan/archive/refs/tags/v0.6.2.tar.gz"
-  sha256 "7d21da82483e7f46c49f21de4cc392930cef3c07be49f881c5124fb5fd3a3e7b"
+  url "https://github.com/cB-Sigma/uccharan/archive/refs/tags/v0.6.3.tar.gz"
+  sha256 "d4b09eb08646f2da01a566f4aaf87b53202dc71d4f310ce8548c67fe87260279"
   license "Apache-2.0"
   head "https://github.com/cB-Sigma/uccharan.git", branch: "main"
 
