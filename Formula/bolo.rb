@@ -3,8 +3,8 @@ class Bolo < Formula
 
   desc "Self-hosted speech server: speech-to-text, text-to-speech and voice agents"
   homepage "https://github.com/cB-Sigma/bolo"
-  url "https://files.pythonhosted.org/packages/6e/f6/2babfc771ebf28a31f62fa11187286239f5e3fa09e789b83b7ee2d458fd7/bolo_speech-0.5.0-py3-none-any.whl", using: :nounzip
-  sha256 "785d4d7a338e33857c4e9dfb4d59f6dd025a99ef262a08529c6b16751f651a1e"
+  url "https://files.pythonhosted.org/packages/4a/6a/c7f1bb5e3807bdbaad69b12d5409352ea430bc3b7ad6d1e6d6365570e5a2/bolo_speech-0.6.0-py3-none-any.whl", using: :nounzip
+  sha256 "c56f77b47492e0b6d59c86723d4631ed1583f5e4c19383d63629c902e503389a"
   license "Apache-2.0"
 
   livecheck do
@@ -73,21 +73,21 @@ class Bolo < Formula
       cffi==2.1.1
       click==8.5.1
       ctranslate2==4.9.0
-      fastapi==0.163.0
+      fastapi==0.163.1
       faster-whisper==1.2.1
       filelock==4.2.10
       flatbuffers==25.12.19
       fsspec==2026.9.0
       h11==0.16.0
       hf-xet==1.8.0
-      httpcore2==2.16.0
+      httpcore2==2.16.1
       httpcore==1.0.9
       httptools==0.9.0
-      httpx2==2.16.0
+      httpx2==2.16.1
       httpx==0.28.1
       huggingface_hub==2.4.0
       idna==3.20
-      numpy==2.5.4
+      numpy==2.5.5
       onnxruntime==1.32.0; sys_platform != "darwin" or platform_machine == "arm64"
       onnxruntime==1.23.2; sys_platform == "darwin" and platform_machine == "x86_64"
       opentelemetry-api==1.45.2
@@ -110,7 +110,7 @@ class Bolo < Formula
       truststore==0.10.5
       typing-inspection==0.4.5
       typing_extensions==4.16.0
-      uccharan==0.6.1
+      uccharan==0.6.4
       uvicorn==0.54.0
       uvloop==0.23.0
       watchfiles==1.3.0
