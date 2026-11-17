@@ -3,8 +3,8 @@ class Bolo < Formula
 
   desc "Self-hosted speech server: speech-to-text, text-to-speech and voice agents"
   homepage "https://github.com/cB-Sigma/bolo"
-  url "https://files.pythonhosted.org/packages/d0/2e/be97d13cefc76d709d1fc191bf0ad7a134bca1c1a47f909d7cc9b502fd97/bolo_speech-0.6.1-py3-none-any.whl", using: :nounzip
-  sha256 "61a3c7926444f8ae17730ecb7d636e4f73e8b92b03bdc64ccadc3593296600fe"
+  url "https://files.pythonhosted.org/packages/a1/c8/82a73ce8b188b866abd36b018d4d477e844b3f778ce0c797741e201db7e8/bolo_speech-0.6.2-py3-none-any.whl", using: :nounzip
+  sha256 "9638b6612a23947da1c92164490a2364d377a081f5ca3dea6b310230c562cc07"
   license "Apache-2.0"
 
   livecheck do
@@ -110,7 +110,7 @@ class Bolo < Formula
       truststore==0.10.5
       typing-inspection==0.4.5
       typing_extensions==4.16.0
-      uccharan==0.6.4
+      uccharan==0.6.5
       uvicorn==0.54.0
       uvloop==0.23.0
       watchfiles==1.3.0
