@@ -3,8 +3,8 @@ class Bolo < Formula
 
   desc "Self-hosted speech server: speech-to-text, text-to-speech and voice agents"
   homepage "https://github.com/cB-Sigma/bolo"
-  url "https://files.pythonhosted.org/packages/a1/c8/82a73ce8b188b866abd36b018d4d477e844b3f778ce0c797741e201db7e8/bolo_speech-0.6.2-py3-none-any.whl", using: :nounzip
-  sha256 "9638b6612a23947da1c92164490a2364d377a081f5ca3dea6b310230c562cc07"
+  url "https://files.pythonhosted.org/packages/83/f7/71be90dbcd80f0e2c2fedf0be4162a5e4e93780dab6e29a79e07ce56ee59/bolo_speech-0.6.5-py3-none-any.whl", using: :nounzip
+  sha256 "1e8d4d294dddaa830dff94a40f4eb80c40c528ddca04a7ca87b9137d5f1cc0af"
   license "Apache-2.0"
 
   livecheck do
@@ -75,7 +75,7 @@ class Bolo < Formula
       ctranslate2==4.9.0
       fastapi==0.163.1
       faster-whisper==1.2.1
-      filelock==4.2.10
+      filelock==4.2.11
       flatbuffers==25.12.19
       fsspec==2026.9.0
       h11==0.16.0
