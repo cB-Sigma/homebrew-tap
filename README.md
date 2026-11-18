@@ -1,7 +1,7 @@
 # cB-Sigma Homebrew tap
 
 Homebrew formulae for [uccharan](https://github.com/cB-Sigma/uccharan) and
-[bolo](https://github.com/cB-Sigma/bolo).
+[bolo](https://github.com/cB-Sigma/bolo-speech).
 
 ```sh
 brew install cb-sigma/tap/uccharan
@@ -49,7 +49,7 @@ bolo serve                   # or run it in the foreground
 The service serves the web console at <http://127.0.0.1:8000/> and the API at
 `http://127.0.0.1:8000/v1/`. It keeps its models in `$(brew --prefix)/var/bolo` and logs to
 `$(brew --prefix)/var/log/bolo.log`. Settings go into `~/.config/bolo/config.toml` or `BOLO_*`
-environment variables ([configuration](https://github.com/cB-Sigma/bolo/blob/main/docs/configuration.md)).
+environment variables ([configuration](https://github.com/cB-Sigma/bolo-speech/blob/main/docs/configuration.md)).
 
 bolo is CPU-first. The extras outside `all` (eSpeak NG, which is GPL-3.0-or-later; kokoro-onnx;
 whispercpp, moonshine, s2s, turn, orpheus, sip, webrtc, text) are opt-in; add them to the
@@ -101,5 +101,5 @@ previous one until the problem is fixed.
 Problems with a formula or with installing through Homebrew:
 [issues of this tap](https://github.com/cB-Sigma/homebrew-tap/issues). Problems with the programs
 themselves: [uccharan issues](https://github.com/cB-Sigma/uccharan/issues),
-[bolo issues](https://github.com/cB-Sigma/bolo/issues). Please include the output of
+[bolo issues](https://github.com/cB-Sigma/bolo-speech/issues). Please include the output of
 `brew config` and `brew doctor`.

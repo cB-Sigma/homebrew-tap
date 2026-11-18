@@ -2,7 +2,7 @@ class Bolo < Formula
   include Language::Python::Virtualenv
 
   desc "Self-hosted speech server: speech-to-text, text-to-speech and voice agents"
-  homepage "https://github.com/cB-Sigma/bolo"
+  homepage "https://github.com/cB-Sigma/bolo-speech"
   url "https://files.pythonhosted.org/packages/83/f7/71be90dbcd80f0e2c2fedf0be4162a5e4e93780dab6e29a79e07ce56ee59/bolo_speech-0.6.5-py3-none-any.whl", using: :nounzip
   sha256 "1e8d4d294dddaa830dff94a40f4eb80c40c528ddca04a7ca87b9137d5f1cc0af"
   license "Apache-2.0"
