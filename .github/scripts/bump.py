@@ -132,13 +132,13 @@ def bump_bolo(force: bool) -> str | None:
     text = replace_one(text, r'^  sha256 "[0-9a-f]+"$', f'  sha256 "{wheel["digests"]["sha256"]}"')
     block = "\n".join(f"      {p}" for p in pins.splitlines())
     text, n = re.subn(
-        r"(  def pinned_requirements\n    <<~EOS\n)(?:.*\n)*?(    EOS\n)",
+        r"(    \(buildpath/\"constraints.txt\"\)\.write <<~EOS\n)(?:.*\n)*?(    EOS\n)",
         lambda m: m.group(1) + block + "\n" + m.group(2),
         text,
         count=1,
     )
     if n != 1:
-        sys.exit("pinned_requirements block not found in Formula/bolo.rb")
+        sys.exit("constraints block not found in Formula/bolo.rb")
     old = path.read_text()
     path.write_text(text)
     if text == old:

@@ -39,32 +39,10 @@ class Bolo < Formula
       system python, wheel/"pip", "install", "--no-cache-dir", "--no-deps", "--ignore-installed", wheel
     end
 
-    # bolo-speech[all] and its dependencies are installed from PyPI wheels at the
-    # versions pinned below, so that every build gets the same set.
-    (buildpath/"constraints.txt").write pinned_requirements
-    system python, "-m", "pip", "install", "--no-cache-dir", "--disable-pip-version-check",
-           "--ignore-installed", "--only-binary=:all:", "--constraint", buildpath/"constraints.txt",
-           "bolo-speech[all] @ file://#{buildpath}/bolo_speech-#{version}-py3-none-any.whl"
-    libexec.install buildpath/"constraints.txt"
-
-    # Some Intel macOS wheels (PyAV's bundled libraries) carry absolute dylib IDs too
-    # long for Homebrew to rewrite in place; @rpath IDs are kept as they are.
-    if OS.mac? && Hardware::CPU.intel?
-      # (find, not glob: the libraries are in hidden .dylibs directories)
-      (libexec/"lib").find do |file|
-        next if file.symlink? || !file.file? || [".dylib", ".so"].exclude?(file.extname)
-        next if !file.dylib? || file.dylib_id.nil? || file.dylib_id.start_with?("@")
-
-        file.change_dylib_id("@rpath/#{File.basename(file.dylib_id)}")
-      end
-    end
-    bin.install_symlink libexec/"bin/bolo"
-  end
-
-  # The resolved versions of bolo-speech[all]'s dependencies. Written by
-  # .github/scripts/bump.py from a full install; do not edit by hand.
-  def pinned_requirements
-    <<~EOS
+    # bolo-speech[all] and its dependencies are installed from PyPI wheels at these
+    # versions, so that every build gets the same set. Written by .github/scripts/bump.py
+    # from a full install; do not edit by hand.
+    (buildpath/"constraints.txt").write <<~EOS
       annotated-doc==0.0.6
       annotated-types==0.8.0
       anyio==4.16.0
@@ -117,6 +95,23 @@ class Bolo < Formula
       websockets==17.4
       wyoming==1.11.0
     EOS
+    system python, "-m", "pip", "install", "--no-cache-dir", "--disable-pip-version-check",
+           "--ignore-installed", "--only-binary=:all:", "--constraint", buildpath/"constraints.txt",
+           "bolo-speech[all] @ file://#{buildpath}/bolo_speech-#{version}-py3-none-any.whl"
+    libexec.install buildpath/"constraints.txt"
+
+    # Some Intel macOS wheels (PyAV's bundled libraries) carry absolute dylib IDs too
+    # long for Homebrew to rewrite in place; @rpath IDs are kept as they are.
+    if OS.mac? && Hardware::CPU.intel?
+      # (find, not glob: the libraries are in hidden .dylibs directories)
+      (libexec/"lib").find do |file|
+        next if file.symlink? || !file.file? || [".dylib", ".so"].exclude?(file.extname)
+        next if !file.dylib? || file.dylib_id.nil? || file.dylib_id.start_with?("@")
+
+        file.change_dylib_id("@rpath/#{File.basename(file.dylib_id)}")
+      end
+    end
+    bin.install_symlink libexec/"bin/bolo"
   end
 
   def caveats
