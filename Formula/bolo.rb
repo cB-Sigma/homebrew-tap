@@ -3,8 +3,8 @@ class Bolo < Formula
 
   desc "Self-hosted speech server: speech-to-text, text-to-speech and voice agents"
   homepage "https://github.com/cB-Sigma/bolo-speech"
-  url "https://files.pythonhosted.org/packages/83/f7/71be90dbcd80f0e2c2fedf0be4162a5e4e93780dab6e29a79e07ce56ee59/bolo_speech-0.6.5-py3-none-any.whl", using: :nounzip
-  sha256 "1e8d4d294dddaa830dff94a40f4eb80c40c528ddca04a7ca87b9137d5f1cc0af"
+  url "https://files.pythonhosted.org/packages/10/6c/6433616433a2e09cf090c5b46ba204efe5c640e061a96a24e2eec725616f/bolo_speech-0.6.8-py3-none-any.whl", using: :nounzip
+  sha256 "258e07a198189e397d7e956ae23b2a8f6b906b1f647a292ff9bf5e1cbd625a39"
   license "Apache-2.0"
 
   livecheck do
@@ -43,7 +43,7 @@ class Bolo < Formula
     # versions, so that every build gets the same set. Written by .github/scripts/bump.py
     # from a full install; do not edit by hand.
     (buildpath/"constraints.txt").write <<~EOS
-      annotated-doc==0.0.6
+      annotated-doc==0.0.7
       annotated-types==0.8.0
       anyio==4.16.0
       av==19.0.2
@@ -51,9 +51,9 @@ class Bolo < Formula
       cffi==2.1.1
       click==8.5.1
       ctranslate2==4.9.0
-      fastapi==0.163.1
+      fastapi==0.164.0
       faster-whisper==1.2.1
-      filelock==4.2.11
+      filelock==4.2.12
       flatbuffers==25.12.19
       fsspec==2026.9.0
       h11==0.16.0
@@ -88,7 +88,7 @@ class Bolo < Formula
       truststore==0.10.5
       typing-inspection==0.4.5
       typing_extensions==4.16.0
-      uccharan==0.6.5
+      uccharan==0.6.6
       uvicorn==0.54.0
       uvloop==0.23.0
       watchfiles==1.3.0
