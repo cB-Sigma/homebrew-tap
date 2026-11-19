@@ -3,8 +3,8 @@ class Bolo < Formula
 
   desc "Self-hosted speech server: speech-to-text, text-to-speech and voice agents"
   homepage "https://github.com/cB-Sigma/bolo-speech"
-  url "https://files.pythonhosted.org/packages/08/1b/9267842e66bbef9b6db2d0fb1b87dfc1d9650dce26a98d3639dfb0eaddb7/bolo_speech-0.6.10-py3-none-any.whl", using: :nounzip
-  sha256 "190b58c97a1c414cbc39bee6b88b350d233ac106d1d6221eb2619b40c890d642"
+  url "https://files.pythonhosted.org/packages/d8/b0/637655144a248f89513b11e9ed7139c19fbb4e604d68e441ae5a47846804/bolo_speech-1.0.0-py3-none-any.whl", using: :nounzip
+  sha256 "d60d33fd0f6552978cc128db02c5bb481251f5139373ee954bf435ff93486f48"
   license "Apache-2.0"
 
   livecheck do
@@ -78,8 +78,8 @@ class Bolo < Formula
       python-dotenv==1.2.4
       python-multipart==0.0.34
       PyYAML==6.0.3
-      sherpa-onnx-core==2.0.1
-      sherpa_onnx==2.0.1
+      sherpa-onnx-core==2.0.2
+      sherpa_onnx==2.0.2
       soundfile==0.14.0
       soxr==1.1.0
       starlette==1.10.0
