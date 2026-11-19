@@ -51,13 +51,15 @@ The service serves the web console at <http://127.0.0.1:8000/> and the API at
 `$(brew --prefix)/var/log/bolo.log`. Settings go into `~/.config/bolo/config.toml` or `BOLO_*`
 environment variables ([configuration](https://github.com/cB-Sigma/bolo-speech/blob/main/docs/configuration.md)).
 
-bolo is CPU-first. The extras outside `all` (eSpeak NG, which is GPL-3.0-or-later; kokoro-onnx;
-whispercpp, moonshine, s2s, turn, orpheus, sip, webrtc, text) are opt-in; add them to the
-formula's virtualenv with its pip, within the pinned versions:
+On a Mac with Apple silicon the formula also installs the MLX and whisper.cpp engines (`bolo-speech[all,mlx,whispercpp]`),
+and bolo runs their models on the GPU (Metal) by default. The other extras (eSpeak NG, which is GPL-3.0-or-later;
+kokoro-onnx; moonshine, s2s, turn, lid, align, wake, pii, itn, orpheus, sip, webrtc) and the bolo-torch plugin
+for PyTorch models are opt-in; add them to the formula's virtualenv with its pip, within the pinned versions:
 
 ```sh
 $(brew --prefix bolo)/libexec/bin/pip install -c $(brew --prefix bolo)/libexec/constraints.txt \
   "bolo-speech[espeak]==$(bolo --version | cut -d' ' -f2)"
+$(brew --prefix bolo)/libexec/bin/pip install "bolo-torch[parler,sepformer]"
 ```
 
 Extras added this way are not kept across `brew upgrade bolo`: add them again after an upgrade.

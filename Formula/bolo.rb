@@ -95,9 +95,13 @@ class Bolo < Formula
       websockets==17.4
       wyoming==1.11.0
     EOS
+    # On Apple silicon also the engines that run on its GPU (MLX models, whisper.cpp with Metal), which bolo
+    # places there by default. Their own dependencies are not in the pins above: bump.py resolves on Linux,
+    # where these extras install nothing; the macOS tests install and run them.
+    extras = (OS.mac? && Hardware::CPU.arm?) ? "all,mlx,whispercpp" : "all"
     system python, "-m", "pip", "install", "--no-cache-dir", "--disable-pip-version-check",
            "--ignore-installed", "--only-binary=:all:", "--constraint", buildpath/"constraints.txt",
-           "bolo-speech[all] @ file://#{buildpath}/bolo_speech-#{version}-py3-none-any.whl"
+           "bolo-speech[#{extras}] @ file://#{buildpath}/bolo_speech-#{version}-py3-none-any.whl"
     libexec.install buildpath/"constraints.txt"
 
     # Some Intel macOS wheels (PyAV's bundled libraries) carry absolute dylib IDs too
@@ -122,8 +126,10 @@ class Bolo < Formula
       `bolo serve` run by hand keeps models in ~/.cache/bolo instead. Settings go
       into ~/.config/bolo/config.toml or BOLO_* environment variables.
 
-      bolo is CPU-first: models run on the CPU unless you set device = "coreml"
-      (macOS) or "cuda" (Linux with an NVIDIA GPU; GPU use is untested).
+      On a Mac with Apple silicon this formula also installs the MLX and
+      whisper.cpp engines, and their models run on the GPU (Metal) by default;
+      everything else runs on the CPU. On Linux with an NVIDIA GPU, set
+      device = "cuda" (and install onnxruntime-gpu as below).
 
       This formula installs bolo-speech[all]: sherpa-onnx, faster-whisper,
       uccharan, PyAV and Wyoming. The other extras are opt-in. Add one to the
@@ -132,7 +138,9 @@ class Bolo < Formula
           'bolo-speech[espeak]==#{version}'
       espeak       eSpeak NG for languages uccharan does not cover (GPL-3.0-or-later)
       kokoro-onnx  the kokoro-onnx engine (pulls in GPL code)
-      whispercpp, moonshine, s2s, turn, orpheus, sip, webrtc, text
+      moonshine, s2s, turn, lid, align, wake, pii, itn, orpheus, sip, webrtc
+      PyTorch models: the bolo-torch plugin, the same way:
+        $(brew --prefix bolo)/libexec/bin/pip install 'bolo-torch[parler,sepformer]'
       For NVIDIA GPUs on Linux, install onnxruntime-gpu the same way.
       Extras added like this are gone after `brew upgrade bolo`; add them again.
     EOS
