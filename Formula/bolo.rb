@@ -3,8 +3,8 @@ class Bolo < Formula
 
   desc "Self-hosted speech server: speech-to-text, text-to-speech and voice agents"
   homepage "https://github.com/cB-Sigma/bolo-speech"
-  url "https://files.pythonhosted.org/packages/d8/b0/637655144a248f89513b11e9ed7139c19fbb4e604d68e441ae5a47846804/bolo_speech-1.0.0-py3-none-any.whl", using: :nounzip
-  sha256 "d60d33fd0f6552978cc128db02c5bb481251f5139373ee954bf435ff93486f48"
+  url "https://files.pythonhosted.org/packages/84/ca/935f67ce882fea6997ce4a927ad89c048f8b1e17beb3c4d387d62bc3bc81/bolo_speech-1.0.2-py3-none-any.whl", using: :nounzip
+  sha256 "d9757e068d4cc5568121cb6d9a4d7177b46063d7927a7e3c870588f79762f22f"
   license "Apache-2.0"
 
   livecheck do
@@ -47,13 +47,13 @@ class Bolo < Formula
       annotated-types==0.8.0
       anyio==4.16.0
       av==19.0.2
-      certifi==2026.10.23
+      certifi==2026.11.20
       cffi==2.1.1
       click==8.5.1
-      ctranslate2==4.9.0
+      ctranslate2==4.9.1
       fastapi==0.165.0
       faster-whisper==1.2.1
-      filelock==4.2.12
+      filelock==4.3.0
       flatbuffers==25.12.19
       fsspec==2026.9.0
       h11==0.16.0
@@ -73,13 +73,13 @@ class Bolo < Formula
       protobuf==7.36.2
       psutil==7.2.2
       pycparser==3.12
-      pydantic==2.14.3
-      pydantic_core==2.50.4
+      pydantic==2.14.4
+      pydantic_core==2.50.5
       python-dotenv==1.2.4
       python-multipart==0.0.34
-      PyYAML==6.0.3
-      sherpa-onnx-core==2.0.2
-      sherpa_onnx==2.0.2
+      PyYAML==6.0.4
+      sherpa-onnx-core==2.0.3
+      sherpa_onnx==2.0.3
       soundfile==0.14.0
       soxr==1.1.0
       starlette==1.10.0
@@ -88,7 +88,7 @@ class Bolo < Formula
       truststore==0.10.5
       typing-inspection==0.4.5
       typing_extensions==4.16.0
-      uccharan==0.6.6
+      uccharan==1.0.0
       uvicorn==0.54.0
       uvloop==0.23.0
       watchfiles==1.3.0
